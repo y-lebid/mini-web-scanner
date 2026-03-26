@@ -42,4 +42,6 @@ This project is distributed under the GNU GPLv3 license. For more details, see t
 
 ## ⚠️ Disclaimer
 
-This tool is created solely for educational purposes. Use it only on your own servers or systems that you have explicit permission to scan. The author is not responsible for any misuse.
+This tool is designed for both educational purposes and practical web application security audits. The end user bears sole responsibility for the use of this scanner.
+
+Use this software product only on your own servers, systems, or targets for which you have **express permission** to test (for example, as part of Bug Bounty programs). The project author is not liable for any damages, server disruptions, or any other misuse of this tool.
