@@ -4,42 +4,44 @@
 ![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)
 ![Status](https://img.shields.io/badge/status-active-success.svg)
 
-Простий, швидкий та ефективний CLI-інструмент на Python для базового аудиту безпеки веб-додатків. Створений для розробників, які хочуть швидко перевірити свої сайти на поширені помилки конфігурації.
+A simple, fast, and effective Python CLI tool for basic web application security audits. Designed for developers who want to quickly check their sites for common configuration errors.
 
-## 🚀 Можливості (MVP 1.0)
+## 🚀 Features (MVP 1.0)
 
-* **Аналіз Security Headers:** Перевірка наявності критичних HTTP-заголовків (HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy тощо).
-* **Terminal UI:** Зручний та зрозумілий кольоровий вивід результатів завдяки `colorama`.
+* **Security Headers Analysis:** Checks for the presence of critical HTTP headers (HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, etc.).
+* **Terminal UI:** Convenient and intuitive color-coded output of results thanks to `colorama`.
 
-## 📸 Як це виглядає
+## 📸 What it looks like
 
 <!-- ![screenshot](path/to/image.png) -->
 
-## 🛠️ Встановлення та запуск
+## 🛠️ Installation and setup
 
-1. Склонуйте репозиторій:
+1. Clone the repository:
    ```bash
    git clone https://github.com/y-lebid/mini-web-scanner.git
    cd mini-web-scanner
 
-2. Встановіть залежності
+2. Install dependencies
    ```bash
    pip install requests colorama
    ```
-3. Запустіть
+3. Run
    ```bash
    python scanner.py
    ```
 
 ## 🗺️ Roadmap
-* **Розширений аналіз HTTP-заголовків безпеки**
-* **Directory Bruteforce (пошук прихованих файлів: /.env, /.git, robots.txt)**
-* **Підміна User-Agent для обходу базового WAF**
-* **Генерація звітів у форматах .txt та .json**
-## 📄 Ліцензія
+* **Advanced analysis of HTTP security headers**
+* **Directory Bruteforce (search for hidden files: /.env, /.git, robots.txt)**
+* **User-Agent spoofing to bypass basic WAFs**
+* **Report generation in .txt and .json formats**
+## 📄 License
 
-Цей проєкт розповсюджується під ліцензією GNU GPLv3. Детальніше читайте у файлі **LICENSE**.
+This project is distributed under the GNU GPLv3 license. For more details, see the **LICENSE** file.
 
-## ⚠️ Відмова від відповідальності
+## ⚠️ Disclaimer
 
-Цей інструмент створено виключно в освітніх цілях. Використовуйте його лише на власних серверах або системах, на сканування яких у вас є явний дозвіл. Автор не несе відповідальності за неправомірне використання.
+This tool is designed for both educational purposes and practical web application security audits. The end user bears sole responsibility for the use of this scanner.
+
+Use this software product only on your own servers, systems, or targets for which you have **express permission** to test (for example, as part of Bug Bounty programs). The project author is not liable for any damages, server disruptions, or any other misuse of this tool.
