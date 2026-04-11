@@ -12,6 +12,7 @@ A simple, fast, and effective Python CLI tool for basic web application security
 * **Terminal UI:** Convenient and intuitive color-coded output of results thanks to `colorama`.
 
 ## 📸 What it looks like
+<img width="703" height="375" alt="image" src="https://github.com/user-attachments/assets/2c5105e0-2451-4a03-8e62-60225097770f" />
 
 <!-- ![screenshot](path/to/image.png) -->
 
