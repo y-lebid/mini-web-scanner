@@ -1,3 +1,7 @@
+<div align="right">
+  <a href="README.uk.md">🇺🇦 Українська</a> •
+  <a href="README.md">🇬🇧 English</a>
+</div>
 # 🛡️ Mini Web Vulnerability Scanner
 
 ![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)
