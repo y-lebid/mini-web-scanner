@@ -3,7 +3,7 @@
   <a href="README.md">🇬🇧 English</a>
 </div>
 
-### 🛡️ Міні-сканер вразливостей веб-додатків
+## 🛡️ Міні-сканер вразливостей веб-додатків
 
 ![Версія для Python](https://img.shields.io/badge/python-3.8+-blue.svg)
 ![Ліцензія: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)
