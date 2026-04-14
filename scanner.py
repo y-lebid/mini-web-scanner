@@ -1,21 +1,18 @@
-import requests
-from tqdm import tqdm
-from colorama import init, Fore, Style
 import json
-from urllib.parse import urlparse
 import random
+from pathlib import Path
+from urllib.parse import urlparse
+
 import pyfiglet
+import requests
+from colorama import Fore, Style, init
+from tqdm import tqdm
 
 
-def print_banner():
-    ascii_banner = pyfiglet.figlet_format("MWVS")
-    print(Fore.CYAN + Style.BRIGHT + ascii_banner + Style.RESET_ALL)
-    print(Fore.YELLOW + "         v2.0 - Developed by l_yehor\n" + Style.RESET_ALL)
-    print(Fore.CYAN + "_" * 60 + Style.RESET_ALL)
+# Constants used throughout the scanner.
+DEFAULT_TIMEOUT = 5
 
-
-init(autoreset=True)
-
+# Paths and files that are often sensitive and should not be publicly accessible.
 SENSITIVE_PATHS = [
     ".env",
     ".git/",
@@ -27,166 +24,193 @@ SENSITIVE_PATHS = [
     "wp-config.php",
     "backup.zip",
     "db.sql",
-    ".DS_Store"
+    ".DS_Store",
 ]
 
+# Random user agents help avoid simplistic bot blocking.
 USER_AGENTS = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3 Safari/605.1.15",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0"
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0",
 ]
 
-def scan_headers(url):
-    results = {
-        'url': url,
-        'status': 'error',
-        'headers': {},
-        'error_message': None
-    }
-    
-    security_headers = [
-        'Strict-Transport-Security', 
-        'Content-Security-Policy',   
-        'X-Frame-Options',           
-        'X-Content-Type-Options',
-        'Referrer-Policy',
-        'Permissions-Policy'
-    ]
+# Security headers to check on the target website.
+SECURITY_HEADERS = [
+    "Strict-Transport-Security",
+    "Content-Security-Policy",
+    "X-Frame-Options",
+    "X-Content-Type-Options",
+    "Referrer-Policy",
+    "Permissions-Policy",
+]
 
-    headers_to_send = {'User-Agent': random.choice(USER_AGENTS)}
+
+def print_banner() -> None:
+    """Display the program banner in the terminal."""
+    ascii_banner = pyfiglet.figlet_format("MWVS")
+    print(Fore.CYAN + Style.BRIGHT + ascii_banner + Style.RESET_ALL)
+    print(Fore.YELLOW + "         v2.0 - Developed by l_yehor\n" + Style.RESET_ALL)
+    print(Fore.CYAN + "_" * 60 + Style.RESET_ALL)
+
+
+def get_random_headers() -> dict[str, str]:
+    """Return a random User-Agent header for each request."""
+    return {"User-Agent": random.choice(USER_AGENTS)}
+
+
+def normalize_url(url: str) -> str:
+    """Ensure the URL starts with http:// or https://."""
+    if not url.startswith(("http://", "https://")):
+        return f"http://{url}"
+    return url
+
+
+def get_domain_name(url: str) -> str:
+    """Convert a URL into a safe filename prefix."""
+    domain = urlparse(url).netloc.replace(".", "_").replace(":", "_")
+    return domain or "scan_result"
+
+
+def scan_headers(url: str) -> dict:
+    """Check the target URL for common security headers."""
+    results = {
+        "url": url,
+        "status": "error",
+        "headers": {},
+        "error_message": None,
+    }
 
     try:
-        response = requests.get(url, headers=headers_to_send, timeout=5)
-        results['status'] = 'success'
+        response = requests.get(url, headers=get_random_headers(), timeout=DEFAULT_TIMEOUT)
+        results["status"] = "success"
         response_headers = response.headers
 
-        for header in security_headers:
-            if header in response_headers:
-                results['headers'][header] = {
-                    'present': True,
-                    'value': response_headers[header]
-                }
-            else:
-                results['headers'][header] = {
-                    'present': False,
-                    'value': None
-                }
-    except requests.exceptions.RequestException as e:
-        results['status'] = 'error'
-        results['error_message'] = str(e)
+        for header_name in SECURITY_HEADERS:
+            results["headers"][header_name] = {
+                "present": header_name in response_headers,
+                "value": response_headers.get(header_name),
+            }
+    except requests.exceptions.RequestException as caught_error:
+        results["error_message"] = str(caught_error)
 
     return results
-    
-def print_results_to_terminal(scan_data):
-    url = scan_data['url']
-    print(Fore.CYAN + f'\n[*] Analyzing security headers for: {url}')
-    print(Fore.CYAN + '_' * 60)
 
-    if scan_data['status'] == 'error':
-        print(Fore.RED + Style.BRIGHT + f'[!] Not connected to {url}.')
-        print(Fore.RED + f'Error: {scan_data["error_message"]}')
-        return
 
-    for header, details in scan_data['headers'].items():
-        if details['present']:
-            print(Fore.GREEN + f"[+] FOUND: {header} -> {details['value']}")
-        else:
-            print(Fore.RED + f'[-] MISSING: {header} (Potential vulnerability!)')
-
-def scan_sensitive_files(base_url):
+def scan_sensitive_files(base_url: str) -> list[tuple[str, str]]:
+    """Scan common sensitive file locations on the target host."""
     print(Fore.CYAN + "\n[+] Scanning for sensitive files...")
     print(Fore.CYAN + "_" * 60)
 
-    found = []
-    headers_to_send = {'User-Agent': random.choice(USER_AGENTS)}
+    found_files = []
 
     for path in tqdm(SENSITIVE_PATHS, desc="Scanning", colour="green", ncols=80):
-        url = f"{base_url.rstrip('/')}/{path}"
+        target_url = f"{base_url.rstrip('/')}/{path}"
 
         try:
-            response = requests.get(url, headers=headers_to_send, timeout=5)
-
+            response = requests.get(target_url, headers=get_random_headers(), timeout=DEFAULT_TIMEOUT)
             if response.status_code == 200:
-                tqdm.write(Fore.GREEN + f"[+] FOUND: {url}")
-                found.append((url, "accessible"))
-
+                tqdm.write(Fore.GREEN + f"[+] FOUND: {target_url}")
+                found_files.append((target_url, "accessible"))
             elif response.status_code == 403:
-                tqdm.write(Fore.YELLOW + f"[!] FORBIDDEN (exists?): {url}")
-                found.append((url, "forbidden"))
-
+                tqdm.write(Fore.YELLOW + f"[!] FORBIDDEN (exists?): {target_url}")
+                found_files.append((target_url, "forbidden"))
         except requests.RequestException:
-            pass
+            # Ignore connection errors and continue scanning.
+            continue
 
-    if not found:
+    if not found_files:
         print(Fore.CYAN + "[-] No sensitive files found.")
 
-    return found
+    return found_files
 
-def get_domain_name(url):
-    domain = urlparse(url).netloc.replace('.', '_').replace(':', '_')
-    if not domain:
-        domain = "scan_result"
-    return domain
 
-def save_to_json(scan_data):
-    domain = get_domain_name(scan_data['url'])
-    filename = f'{domain}_report.json'
+def print_results_to_terminal(scan_data: dict) -> None:
+    """Print the header scan results to the console."""
+    print(Fore.CYAN + f"\n[*] Analyzing security headers for: {scan_data['url']}")
+    print(Fore.CYAN + "_" * 60)
 
-    with open(filename, 'w', encoding='utf-8') as f:
-        json.dump(scan_data, f, indent=4)
-    
-    print(Fore.GREEN + f'\n[+] JSON-Report saved to {filename}' + Style.RESET_ALL)
+    if scan_data["status"] == "error":
+        print(Fore.RED + Style.BRIGHT + f"[!] Not connected to {scan_data['url']}.")
+        print(Fore.RED + f"Error: {scan_data['error_message']}")
+        return
 
-def save_to_txt(scan_data):
-    domain = get_domain_name(scan_data['url'])
-    filename = f'{domain}_report.txt'
-
-    with open(filename, 'w', encoding='utf-8') as f:
-        f.write(f'Security Report \n')
-        f.write(f'URL: {scan_data["url"]}\n')
-        f.write('-' * 50 + '\n')
-
-        if scan_data['status'] == 'error':
-            f.write(f'[!] Scan error: {scan_data["error_message"]}\n')
+    for header, details in scan_data["headers"].items():
+        if details["present"]:
+            print(Fore.GREEN + f"[+] FOUND: {header} -> {details['value']}")
         else:
-            f.write('\n--- Security Headers ---\n')
-            for header, details in scan_data['headers'].items():
-                if details['present']:
-                    f.write(f"[+] FOUND: {header} -> {details['value']}\n")
-                else:
-                    f.write(f"[-] MISSING: {header} (Potential vulnerability!)\n")
+            print(Fore.RED + f"[-] MISSING: {header} (Potential vulnerability!)")
 
-        if 'sensitive_files' in scan_data and scan_data['sensitive_files']:
-            f.write('\n--- Sensitive Files ---\n')
-            for file_url, status in scan_data['sensitive_files']:
-                f.write(f"[{status.upper()}] {file_url}\n")
-        elif 'sensitive_files' in scan_data:
-            f.write('\n--- Sensitive Files ---\n')
-            f.write('No sensitive files found.\n')
-                
-    print(Fore.GREEN + f'\n[+] TXT-Report saved to {filename}' + Style.RESET_ALL)
-    
-if __name__ == '__main__':
-    print_banner()
-    target_url = input(Fore.YELLOW + "Enter the URL to scan (e.g., example.com): " + Style.RESET_ALL).strip()
-    
-    if not target_url.startswith(('http://', 'https://')):
-        target_url = 'http://' + target_url
 
-    data = scan_headers(target_url)
-    print_results_to_terminal(data)
-    if data['status'] != 'error':
-        sensitive_results = scan_sensitive_files(target_url)
+def write_json_report(scan_data: dict) -> None:
+    """Save the scan results as a JSON report."""
+    filename = Path(f"{get_domain_name(scan_data['url'])}_report.json")
+    filename.write_text(json.dumps(scan_data, indent=4, ensure_ascii=False), encoding="utf-8")
+    print(Fore.GREEN + f"\n[+] JSON report saved to {filename}" + Style.RESET_ALL)
+
+
+def write_text_report(scan_data: dict) -> None:
+    """Save the scan results as a plain text report."""
+    filename = Path(f"{get_domain_name(scan_data['url'])}_report.txt")
+    lines = [
+        "Security Report",
+        f"URL: {scan_data['url']}",
+        "-" * 50,
+    ]
+
+    if scan_data["status"] == "error":
+        lines.append(f"[!] Scan error: {scan_data['error_message']}")
     else:
-        sensitive_results = []
+        lines.append("\n--- Security Headers ---")
+        for header, details in scan_data["headers"].items():
+            if details["present"]:
+                lines.append(f"[+] FOUND: {header} -> {details['value']}")
+            else:
+                lines.append(f"[-] MISSING: {header} (Potential vulnerability!)")
 
-    save_choice = input(Fore.YELLOW + "\nDo you want to save the report? (j - JSON, t - TXT, jt - both, n - No): " + Style.RESET_ALL).lower()
-    data['sensitive_files'] = sensitive_results
+    lines.append("\n--- Sensitive Files ---")
+    sensitive_files = scan_data.get("sensitive_files", [])
+    if sensitive_files:
+        lines.extend(f"[{status.upper()}] {url}" for url, status in sensitive_files)
+    else:
+        lines.append("No sensitive files found.")
 
-    if save_choice == 'j':
-        save_to_json(data)
-    elif save_choice == 't':
-        save_to_txt(data)
-    elif save_choice in ['jt', 'tj']:
-        save_to_json(data)
-        save_to_txt(data)
+    filename.write_text("\n".join(lines), encoding="utf-8")
+    print(Fore.GREEN + f"\n[+] TXT report saved to {filename}" + Style.RESET_ALL)
+
+
+def ask_save_choice() -> str:
+    """Ask the user whether to save the report."""
+    return input(
+        Fore.YELLOW
+        + "\nDo you want to save the report? (j - JSON, t - TXT, jt - both, n - No): "
+        + Style.RESET_ALL
+    ).strip().lower()
+
+
+def main() -> None:
+    """Main program flow: banner, scan, and optional report saving."""
+    print_banner()
+    target_url = normalize_url(
+        input(Fore.YELLOW + "Enter the URL to scan (e.g., example.com): " + Style.RESET_ALL).strip()
+    )
+
+    scan_data = scan_headers(target_url)
+    print_results_to_terminal(scan_data)
+
+    scan_data["sensitive_files"] = (
+        scan_sensitive_files(target_url) if scan_data["status"] == "success" else []
+    )
+
+    save_choice = ask_save_choice()
+    if save_choice == "j":
+        write_json_report(scan_data)
+    elif save_choice == "t":
+        write_text_report(scan_data)
+    elif save_choice in {"jt", "tj"}:
+        write_json_report(scan_data)
+        write_text_report(scan_data)
+
+
+if __name__ == "__main__":
+    init(autoreset=True)
+    main()
