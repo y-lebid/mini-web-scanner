@@ -37,7 +37,7 @@ A simple, fast, and effective Python CLI tool for basic web application security
 
 2. Install dependencies
    ```bash
-   pip install requests colorama tqdm
+   pip install requests colorama tqdm pyfiglet
    ```
 3. Run
    ```bash
