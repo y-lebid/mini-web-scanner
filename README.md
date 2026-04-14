@@ -1,4 +1,9 @@
-# 🛡️ Mini Web Vulnerability Scanner
+<div align="right">
+  <a href="README.uk.md">🇺🇦 Українська</a> •
+  <a href="README.md">🇬🇧 English</a>
+</div>
+
+## 🛡️ Mini Web Vulnerability Scanner
 
 ![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)
 ![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)
@@ -6,13 +11,17 @@
 
 A simple, fast, and effective Python CLI tool for basic web application security audits. Designed for developers who want to quickly check their sites for common configuration errors.
 
-## 🚀 Features (MVP 1.0)
+## 🚀 Features (Release 2.0)
 
-* **Security Headers Analysis:** Checks for the presence of critical HTTP headers (HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, etc.).
-* **Terminal UI:** Convenient and intuitive color-coded output of results thanks to `colorama`.
+- [x] - **Security Headers Analysis:** Checks for the presence of critical HTTP headers (HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, etc.).
+- [x] - **Directory Bruteforce:** Actively scans for exposed hidden files and directories (e.g., `/.env`, `/.git/`, `backup.zip`, `wp-config.php`).
+- [x] - **Report Generation:** Export your scan results in structured `.json` or readable `.txt` formats for further analysis.
+- [x] - **Anti-Bot Evasion:** Uses randomized `User-Agent` headers to bypass basic WAFs and server restrictions.
+- [x] - **Interactive Terminal UI:** Convenient color-coded output (`colorama`) with a sleek real-time progress bar (`tqdm`).
 
 ## 📸 What it looks like
-<img width="703" height="375" alt="image" src="https://github.com/user-attachments/assets/2c5105e0-2451-4a03-8e62-60225097770f" />
+<img width="863" height="401" alt="image" src="https://github.com/user-attachments/assets/5463bd8f-96ce-4ac9-8774-4754c30e1806" />
+
 
 <!-- ![screenshot](path/to/image.png) -->
 
@@ -25,7 +34,7 @@ A simple, fast, and effective Python CLI tool for basic web application security
 
 2. Install dependencies
    ```bash
-   pip install requests colorama
+   pip install requests colorama tqdm
    ```
 3. Run
    ```bash
@@ -33,10 +42,10 @@ A simple, fast, and effective Python CLI tool for basic web application security
    ```
 
 ## 🗺️ Roadmap
-* **Advanced analysis of HTTP security headers**
-* **Directory Bruteforce (search for hidden files: /.env, /.git, robots.txt)**
-* **User-Agent spoofing to bypass basic WAFs**
-* **Report generation in .txt and .json formats**
+- [ ] - **Port Scanner Module: Add functionality to check for common open ports (e.g., 21, 22, 80, 443, 3306).**
+- [ ] - **Multithreading: Speed up directory scanning using Python's ThreadPoolExecutor.**
+- [ ] - **Basic Vulnerability Checks: Add simple payload injections to test for basic SQLi or XSS reflections.**
+- [ ] - **ASCII Art Logo: Add a cool startup banner for extra hacker aesthetics.**
 ## 📄 License
 
 This project is distributed under the GNU GPLv3 license. For more details, see the **LICENSE** file.
