@@ -4,6 +4,16 @@ from colorama import init, Fore, Style
 import json
 from urllib.parse import urlparse
 import random
+import pyfiglet
+
+
+def print_banner():
+    ascii_banner = pyfiglet.figlet_format("MWVS")
+    print (Fore.CYAN + ascii_banner + Style.RESET_ALL)
+
+    print(Fore.YELLOW + "         v2.0 - Developed by l_yehor")
+    print(Fore.CYAN + "_" * 60 + "\n")
+
 
 init(autoreset=True)
 
@@ -158,6 +168,7 @@ def save_to_txt(scan_data):
     print(Fore.YELLOW + f'\n[+] TXT-Report saved to {filename}')
     
 if __name__ == '__main__':
+    print_banner()
     target_url = input("Enter the URL to scan (e.g., example.com): ").strip()
     
     if not target_url.startswith(('http://', 'https://')):
