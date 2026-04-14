@@ -13,14 +13,17 @@ A simple, fast, and effective Python CLI tool for basic web application security
 
 ## 🚀 Features (Release 2.0)
 
-- [x] - **Security Headers Analysis:** Checks for the presence of critical HTTP headers (HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, etc.).
-- [x] - **Directory Bruteforce:** Actively scans for exposed hidden files and directories (e.g., `/.env`, `/.git/`, `backup.zip`, `wp-config.php`).
-- [x] - **Report Generation:** Export your scan results in structured `.json` or readable `.txt` formats for further analysis.
-- [x] - **Anti-Bot Evasion:** Uses randomized `User-Agent` headers to bypass basic WAFs and server restrictions.
-- [x] - **Interactive Terminal UI:** Convenient color-coded output (`colorama`) with a sleek real-time progress bar (`tqdm`).
+- [x]  **Security Headers Analysis:** Checks for the presence of critical HTTP headers (HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, etc.).
+- [x]  **Directory Bruteforce:** Actively scans for exposed hidden files and directories (e.g., `/.env`, `/.git/`, `backup.zip`, `wp-config.php`).
+- [x]  **Report Generation:** Export your scan results in structured `.json` or readable `.txt` formats for further analysis.
+- [x]  **Anti-Bot Evasion:** Uses randomized `User-Agent` headers to bypass basic WAFs and server restrictions.
+- [x]  **Interactive Terminal UI:** Convenient color-coded output (`colorama`) with a sleek real-time progress bar (`tqdm`).
+- [x]  **ASCII Art Logo: Add a cool startup banner for extra hacker aesthetics.**
 
 ## 📸 What it looks like
-<img width="863" height="401" alt="image" src="https://github.com/user-attachments/assets/5463bd8f-96ce-4ac9-8774-4754c30e1806" />
+<div align="center">
+  <img width="85%" alt="MWVS Terminal Output" src="https://github.com/user-attachments/assets/f3715bbf-967e-49e5-9c01-7e8752703269" />
+</div>
 
 
 <!-- ![screenshot](path/to/image.png) -->
@@ -42,10 +45,9 @@ A simple, fast, and effective Python CLI tool for basic web application security
    ```
 
 ## 🗺️ Roadmap
-- [ ] - **Port Scanner Module: Add functionality to check for common open ports (e.g., 21, 22, 80, 443, 3306).**
-- [ ] - **Multithreading: Speed up directory scanning using Python's ThreadPoolExecutor.**
-- [ ] - **Basic Vulnerability Checks: Add simple payload injections to test for basic SQLi or XSS reflections.**
-- [ ] - **ASCII Art Logo: Add a cool startup banner for extra hacker aesthetics.**
+- [ ]  **Port Scanner Module: Add functionality to check for common open ports (e.g., 21, 22, 80, 443, 3306).**
+- [ ]  **Multithreading: Speed up directory scanning using Python's ThreadPoolExecutor.**
+- [ ]  **Basic Vulnerability Checks: Add simple payload injections to test for basic SQLi or XSS reflections.**
 ## 📄 License
 
 This project is distributed under the GNU GPLv3 license. For more details, see the **LICENSE** file.
