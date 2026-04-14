@@ -9,10 +9,9 @@ import pyfiglet
 
 def print_banner():
     ascii_banner = pyfiglet.figlet_format("MWVS")
-    print (Fore.CYAN + ascii_banner + Style.RESET_ALL)
-
-    print(Fore.YELLOW + "         v2.0 - Developed by l_yehor")
-    print(Fore.CYAN + "_" * 60 + "\n")
+    print(Fore.CYAN + Style.BRIGHT + ascii_banner + Style.RESET_ALL)
+    print(Fore.YELLOW + "         v2.0 - Developed by l_yehor\n" + Style.RESET_ALL)
+    print(Fore.CYAN + "_" * 60 + Style.RESET_ALL)
 
 
 init(autoreset=True)
@@ -95,13 +94,13 @@ def print_results_to_terminal(scan_data):
             print(Fore.RED + f'[-] MISSING: {header} (Potential vulnerability!)')
 
 def scan_sensitive_files(base_url):
-    print(Fore.MAGENTA + "\n[+] Scanning for sensitive files...")
-    print(Fore.MAGENTA + "_" * 60)
+    print(Fore.CYAN + "\n[+] Scanning for sensitive files...")
+    print(Fore.CYAN + "_" * 60)
 
     found = []
     headers_to_send = {'User-Agent': random.choice(USER_AGENTS)}
 
-    for path in tqdm(SENSITIVE_PATHS, desc="Scanning", colour="green"):
+    for path in tqdm(SENSITIVE_PATHS, desc="Scanning", colour="green", ncols=80):
         url = f"{base_url.rstrip('/')}/{path}"
 
         try:
@@ -136,7 +135,7 @@ def save_to_json(scan_data):
     with open(filename, 'w', encoding='utf-8') as f:
         json.dump(scan_data, f, indent=4)
     
-    print(Fore.YELLOW + f'\n[+] JSON-Report saved to {filename}')
+    print(Fore.GREEN + f'\n[+] JSON-Report saved to {filename}' + Style.RESET_ALL)
 
 def save_to_txt(scan_data):
     domain = get_domain_name(scan_data['url'])
@@ -165,11 +164,11 @@ def save_to_txt(scan_data):
             f.write('\n--- Sensitive Files ---\n')
             f.write('No sensitive files found.\n')
                 
-    print(Fore.YELLOW + f'\n[+] TXT-Report saved to {filename}')
+    print(Fore.GREEN + f'\n[+] TXT-Report saved to {filename}' + Style.RESET_ALL)
     
 if __name__ == '__main__':
     print_banner()
-    target_url = input("Enter the URL to scan (e.g., example.com): ").strip()
+    target_url = input(Fore.YELLOW + "Enter the URL to scan (e.g., example.com): " + Style.RESET_ALL).strip()
     
     if not target_url.startswith(('http://', 'https://')):
         target_url = 'http://' + target_url
@@ -181,8 +180,7 @@ if __name__ == '__main__':
     else:
         sensitive_results = []
 
-    save_choice = input("\n Do you want to save the report? (j - JSON, t - TXT, jt - both, n - No): ").lower()
-
+    save_choice = input(Fore.YELLOW + "\nDo you want to save the report? (j - JSON, t - TXT, jt - both, n - No): " + Style.RESET_ALL).lower()
     data['sensitive_files'] = sensitive_results
 
     if save_choice == 'j':
