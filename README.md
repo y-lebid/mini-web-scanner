@@ -1,59 +1,48 @@
-<div align="right">
-  <a href="README.uk.md">🇺🇦 Українська</a> •
-  <a href="README.md">🇬🇧 English</a>
-</div>
+﻿# Mini Web Scanner
 
-## 🛡️ Mini Web Vulnerability Scanner
+A Python 3.11+ project for a modular web security scanner. Version 3.0.0 is under development. The current codebase provides foundational scan and finding models plus validated scanner configuration; the scanning engine and user interface are not implemented yet.
 
-![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)
-![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)
-![Status](https://img.shields.io/badge/status-active-success.svg)
+## Current status
 
-A simple, fast, and effective Python CLI tool for basic web application security audits. Designed for developers who want to quickly check their sites for common configuration errors.
+Implemented in `src/webscanner/`:
 
-## 🚀 Features (Release 2.0)
+- `Scan` and `ScanStatus` model a scan, its lifecycle timestamps, and findings.
+- `Finding` and `Severity` represent a security finding and its severity.
+- `ScannerConfig` stores scanner settings and validates timeout, redirect, delay, and request-count limits.
 
-- [x]  **Security Headers Analysis:** Checks for the presence of critical HTTP headers (HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, etc.).
-- [x]  **Directory Bruteforce:** Actively scans for exposed hidden files and directories (e.g., `/.env`, `/.git/`, `backup.zip`, `wp-config.php`).
-- [x]  **Report Generation:** Export your scan results in structured `.json` or readable `.txt` formats for further analysis.
-- [x]  **Anti-Bot Evasion:** Uses randomized `User-Agent` headers to bypass basic WAFs and server restrictions.
-- [x]  **Interactive Terminal UI:** Convenient color-coded output (`colorama`) with a sleek real-time progress bar (`tqdm`).
-- [x]  **ASCII Art Logo: Add a cool startup banner for extra hacker aesthetics.**
+The legacy `scanner.py` script belongs to the earlier version and is separate from the 3.0.0 package.
 
-## 📸 What it looks like
-<div align="center">
-  <img width="85%" alt="MWVS Terminal Output" src="https://github.com/user-attachments/assets/f3715bbf-967e-49e5-9c01-7e8752703269" />
-</div>
+## Requirements
 
+- Python 3.11 or newer
 
-<!-- ![screenshot](path/to/image.png) -->
+## Install for development
 
-## 🛠️ Installation and setup
+```bash
+python -m venv .venv
+# Activate the virtual environment, then:
+python -m pip install -e ".[dev]"
+```
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/y-lebid/mini-web-scanner.git
-   cd mini-web-scanner
+## Tests
 
-2. Install dependencies
-   ```bash
-   pip install requests colorama tqdm pyfiglet
-   ```
-3. Run
-   ```bash
-   python scanner.py
-   ```
+```bash
+python -m pytest
+```
 
-## 🗺️ Roadmap
-- [ ]  **Port Scanner Module: Add functionality to check for common open ports (e.g., 21, 22, 80, 443, 3306).**
-- [ ]  **Multithreading: Speed up directory scanning using Python's ThreadPoolExecutor.**
-- [ ]  **Basic Vulnerability Checks: Add simple payload injections to test for basic SQLi or XSS reflections.**
-## 📄 License
+The current tests cover model behavior and configuration validation. They do not yet exercise HTTP scanning, report generation, or a CLI.
 
-This project is distributed under the GNU GPLv3 license. For more details, see the **LICENSE** file.
+## Project layout
 
-## ⚠️ Disclaimer
+```text
+src/webscanner/
+  core/config.py
+  models/finding.py
+  models/scan.py
+tests/
+  test_models.py
+```
 
-This tool is designed for both educational purposes and practical web application security audits. The end user bears sole responsibility for the use of this scanner.
+## License
 
-Use this software product only on your own servers, systems, or targets for which you have **express permission** to test (for example, as part of Bug Bounty programs). The project author is not liable for any damages, server disruptions, or any other misuse of this tool.
+GNU GPL v3. See [LICENSE](LICENSE).
