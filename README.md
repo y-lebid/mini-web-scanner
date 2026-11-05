@@ -1,5 +1,8 @@
 ﻿# Mini Web Scanner
 
+
+> **Status: archived.** This project is no longer maintained. It is kept as a record of the work and as a learning reference. Issues and pull requests are closed.
+
 A Python 3.11+ project for a modular web security scanner. Version 3.0.0 is under development. The current codebase provides foundational scan and finding models plus validated scanner configuration; the scanning engine and user interface are not implemented yet.
 
 ## Current status
